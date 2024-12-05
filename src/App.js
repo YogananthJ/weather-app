@@ -13,8 +13,11 @@ function App() {
   const [city, setCity] = useState('');
   const [weather, setWeather] = useState(null);
   const [error, setError] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [submitted, setSubmitted] = useState(false);
+
   const modalRef = useRef(null);
   const navRef = useRef(null);
 
@@ -1507,58 +1510,81 @@ function App() {
            }
        
            const { latitude, longitude } = coord;
-       
-           try {
-             const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m`);
-             if (response.ok) {
-               const data = await response.json();
-               setWeather(data);
-               setIsModalOpen(true);
-             } else {
-               setError("Failed to fetch weather data.");
-             }
-           } catch (error) {
-             setError("refresh and try again!");
-             window.alert("check your internet connection!")
-           }
-         };
-       
-         const getModalBackground = () => {
-           if (weather && weather.current_weather) {
-             const condition = weather.current_weather.weathercode; // Use the correct field name for weather code
-         
-             switch (condition) {
-               case 0: // Clear sky
-               case 1: // Mainly clear
-               case 2: // Partly cloudy
-                 return 'sunny-background';
-         
-               case 3: // Cloudy
-               case 4: // Mostly cloudy
-                 return 'cloudy-background';
-         
-               case 5: // Light rain showers
-               case 6: // Moderate rain showers
-               case 7: // Heavy rain showers
-               case 8: // Light rain
-               case 9: // Moderate rain
-                 return 'rainy-background';
-         
-               case 10: // Thunderstorm with light rain
-               case 11: // Thunderstorm with moderate rain
-               case 12: // Thunderstorm with heavy rain
-                 return 'thunderstorm-background';
-         
-               default:
-                 return ''; // Default background if the condition is not recognized
-             }
-           }
-           return ''; // Default background if weather or current_weather is not available
-         };
-       
-         const toggleNav = () => setIsNavOpen(!isNavOpen);
-         
-       
+
+    try {
+      const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m,sunrise,sunset`);
+      if (response.ok) {
+        const data = await response.json();
+        setWeather(data);
+        setIsModalOpen(true);
+      } else {
+        setError("Failed to fetch weather data.");
+      }
+    } catch (error) {
+      setError("refresh and try again!");
+      window.alert("check your internet connection!");
+    }
+  };
+
+  const getModalBackground = () => {
+    if (weather && weather.current_weather) {
+      const condition = weather.current_weather.weathercode;
+
+      switch (condition) {
+        case 0: // Clear sky
+        case 1: // Mainly clear
+        case 2: // Partly cloudy
+          return 'sunny-background';
+
+        case 3: // Cloudy
+        case 4: // Mostly cloudy
+          return 'cloudy-background';
+
+        case 5: // Light rain showers
+        case 6: // Moderate rain showers
+        case 7: // Heavy rain showers
+        case 8: // Light rain
+        case 9: // Moderate rain
+          return 'rainy-background';
+
+        case 10: // Thunderstorm with light rain
+        case 11: // Thunderstorm with moderate rain
+        case 12: // Thunderstorm with heavy rain
+          return 'thunderstorm-background';
+
+        default:
+          return ''; // Default background if the condition is not recognized
+      }
+    }
+    return ''; // Default background if weather or current_weather is not available
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Form submitted:", formData);
+    setSubmitted(true);
+
+    setFormData({ name: "", email: "", message: "" });
+
+    setTimeout(() => setSubmitted(false), 5000);
+  };
+  useEffect(() => {
+    fetchWeatherData()
+      .then(response => {
+        if (response && response.hourly) {
+          setWeatherData(response); // Update state with valid data
+        } else {
+          console.error("Hourly data is missing");
+        }
+      })
+      .catch(error => console.error("Error fetching weather data: ", error));
+  }, []);
+
          return (
           <Router>
 
@@ -1607,6 +1633,17 @@ function App() {
                     <div className="home">
                       <h1>WELCOME TO MY WEBSITE</h1>
                       <p>To find Weather, click on Weather in the Navigation Bar.</p>
+                      {weatherData ? (
+      <div>
+        {weatherData.hourly ? (
+          <HourlyWeather data={weatherData.hourly} />
+        ) : (
+          <p>Hourly data is not available.</p>
+        )}
+      </div>
+    ) : (
+      <p>Loading...</p>
+    )}
                     </div>
                   </Route>
       
@@ -1662,27 +1699,69 @@ function App() {
                     </div>
                   </Route>
       
-                  
-
-
-                  <Route path="/about">
-                    <div className="about">
-                      <h2>About Us</h2>
-                      <p>This is a weather app to help you find weather information for your city.</p>
-                    </div>
-                  </Route>
       
                   <Route path="/contact">
-                    <div className="contact">
-                      <h2>Contact Us</h2>
-                      <p>If you have any questions, feel free to reach out at contact@example.com.</p>
-                      
-                    </div>
-                  </Route>
-                </Switch>
+            <div className="contact">
+              <h2>Contact Us</h2>
+
+              <div className="contact-form-container">
+                {/* Display a success message after form submission */}
+                {submitted && <p className="success-message">Thank you for contacting us!</p>}
+
+                <form onSubmit={handleSubmit} className="contact-form">
+                <div className="form-group">
+  <input
+    type="text"
+    id="name"
+    name="name"
+    value={formData.name}
+    onChange={handleChange}
+    placeholder=" "
+    required
+  />
+  <label htmlFor="name">Name:</label>
+</div>
+
+<div className="form-group">
+  <input
+    type="email"
+    id="email"
+    name="email"
+    value={formData.email}
+    onChange={handleChange}
+    placeholder=" "
+    required
+  />
+  <label htmlFor="email">Email:</label>
+</div>
+
+<div className="form-group">
+  <textarea
+    id="message"
+    name="message"
+    value={formData.message}
+    onChange={handleChange}
+    placeholder=" "
+    required
+  ></textarea>
+  <label htmlFor="message">Message:</label>
+</div>
+
+
+                  <button type="submit" className="submit-button">
+                    Submit
+                  </button>
+                </form>
               </div>
             </div>
-          </Router>
-        );
-      }
+            
+          </Route>
+        </Switch>
+      </div>
+      </div>
+    </Router>
+    )
+  }
+
+
       export default App;

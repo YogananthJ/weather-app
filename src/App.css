@@ -313,3 +313,87 @@ button:hover {
 r{
   color: #00d9ff;
 }
+
+.contact-form-container {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.contact-form h2 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+label {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #666;
+  background-color: #f9f9f9; /* Matches the form background */
+  padding: 0 5px;
+  transition: all 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+input,
+textarea {
+  width: 570px;
+  padding: 10px;
+  padding-top: 18px; /* Ensures space for label */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  font-size: 16px;
+  background-color: transparent;
+}
+
+input:focus,
+textarea:focus {
+  border-color: #007bff;
+}
+
+input:focus + label,
+textarea:focus + label,
+input:not(:placeholder-shown) + label,
+textarea:not(:placeholder-shown) + label {
+  top: -1px;
+  font-size: 14px;
+  color: #007bff;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.submit-button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.submit-button:hover {
+  background-color: #0056b3;
+}
+
+.success-message {
+  text-align: center;
+  color: green;
+  margin-bottom: 15px;
+}
+
