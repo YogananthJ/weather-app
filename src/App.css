@@ -1,3 +1,4 @@
+/* App Container */
 .App {
   text-align: center;
   min-height: 100vh;
@@ -6,54 +7,56 @@
   color: white;
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Align container to the top */
-  
+  align-items: flex-start;
 }
 
+/* Weather Card Container */
 .weather-container {
-  background: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
-  backdrop-filter: blur(10px); /* Glass effect */
-  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-radius: 15px;
   padding: 20px;
-  width: 90%; /* Responsive width */
-  max-width: 450px; /* Maximum width for larger screens */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  border: 1px solid rgba(255, 255, 255, 0.2); /* Light border */
-  margin-top: 250px; /* Remove default margin */
+  width: 90%;
+  max-width: 450px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  margin-top: 250px;
   padding-bottom: 40px;
-  padding-right: 0px;
-  padding-left: 0px;
 }
 
+/* Fallback if browser does not support backdrop-filter */
 @supports not (backdrop-filter: blur(10px)) {
   .weather-container {
-    background: rgba(255, 255, 255, 0.3); /* Fallback for unsupported browsers */
+    background: rgba(255, 255, 255, 0.3);
   }
 }
 
+/* Input Styling */
 input {
   padding: 10px;
   font-size: 16px;
   margin-right: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.3); /* Light border */
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 5px;
-  background: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
+  background: rgba(255, 255, 255, 0.1);
   color: white;
   outline: none;
-  width: 60%; /* Responsive width */
-  max-width: 200px; /* Maximum width for larger screens */
+  width: 60%;
+  max-width: 200px;
+  transition: all 0.3s ease;
 }
 
 input::placeholder {
-  color: rgba(255, 255, 255, 0.7); /* Light placeholder text */
+  color: rgba(255, 255, 255, 0.7);
 }
 
+/* Button Styling */
 button {
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
-  background-color: rgba(0, 123, 255, 0.8); /* Semi-transparent blue background */
+  background-color: rgba(0, 123, 255, 0.8);
   color: white;
   border: none;
   border-radius: 5px;
@@ -61,72 +64,115 @@ button {
 }
 
 button:hover {
-  background-color: rgba(0, 86, 179, 0.8); /* Darker blue on hover */
+  background-color: rgba(0, 86, 179, 0.8);
 }
 
 button:disabled {
-  background-color: rgba(204, 204, 204, 0.8); /* Semi-transparent gray for disabled state */
+  background-color: rgba(204, 204, 204, 0.6);
   cursor: not-allowed;
 }
 
-h1 {
-  font-size: 2rem; /* Smaller font size for mobile */
-  margin: 0; /* Remove margin above the heading */
-  margin-bottom: 20px; /* Add space below the heading */
+/* Typography */
+h1, h2, p {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  margin: 0.5em 0;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
 }
 
 h2 {
-  font-size: 1.5rem; /* Smaller font size for mobile */
-  margin-bottom: 10px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  font-size: 1.5rem;
 }
 
 p {
-  font-size: 1rem; /* Smaller font size for mobile */
-  margin: 5px 0;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  font-size: 1rem;
 }
 
-/* Media Queries for Smaller Screens */
+/* Responsive Design */
 @media (max-width: 768px) {
   h1 {
-    font-size: 1.8rem; /* Adjust font size for tablets */
+    font-size: 1.8rem;
   }
 
   h2 {
-    font-size: 1.3rem; /* Adjust font size for tablets */
+    font-size: 1.3rem;
   }
 
   p {
-    font-size: 0.9rem; /* Adjust font size for tablets */
+    font-size: 0.9rem;
   }
 
   input {
-    width: 70%; /* Wider input for smaller screens */
+    width: 70%;
   }
 }
 
 @media (max-width: 480px) {
   h1 {
-    font-size: 1.5rem; /* Adjust font size for mobile */
+    font-size: 1.5rem;
   }
 
   h2 {
-    font-size: 1.2rem; /* Adjust font size for mobile */
+    font-size: 1.2rem;
   }
 
   p {
-    font-size: 0.8rem; /* Adjust font size for mobile */
+    font-size: 0.8rem;
   }
 
   input {
-    width: 80%; /* Wider input for mobile */
-    font-size: 14px; /* Smaller font size for mobile */
+    width: 80%;
+    font-size: 14px;
   }
 
   button {
-    padding: 8px 16px; /* Smaller button for mobile */
-    font-size: 14px; /* Smaller font size for mobile */
+    padding: 8px 16px;
+    font-size: 14px;
   }
+}
+.weather-container {
+  padding: 40px;
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+  margin-top: 150px;
+}
+
+.weather-info-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.weather-info-bar img {
+  width: 60px;
+  height: 60px;
+}
+
+.weather-info-bar p {
+  margin: 0;
+  font-weight: 500;
+}
+
+.weather-info-bar button {
+  padding: 5px 10px;
+  background-color: #3399ff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.input-button-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px; /* space between input and button */
+  margin-bottom: 20px; /* optional: spacing below group */
+  flex-wrap: wrap;
 }

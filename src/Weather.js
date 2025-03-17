@@ -1,72 +1,81 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './App.css';
 
-const Weather = () => {
-  const [weatherData, setWeatherData] = useState(null);
+const App = () => {
   const [city, setCity] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [weatherData, setWeatherData] = useState(null);
+  const [time, setTime] = useState(new Date());
 
-  const API_KEY = 'dae4e98b1e36b032d9ad14b70b1a112e'; // Replace with your OpenWeatherMap API key
+  // Live Clock Effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime(new Date());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
+  // Fetch Weather Data
   const fetchWeather = async () => {
-    if (!city) {
-      setError('Please enter a city name');
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
+    if (!city) return;
     try {
-      const API_URL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`;
-      const response = await axios.get(API_URL);
+      const apiKey = process.env.REACT_APP_WEATHER_API_KEY;
+      const response = await axios.get(
+        `https://api.openweathermap.org/data/2.5/weather?q=${city.trim()}&units=metric&appid=${apiKey}`
+      );
       setWeatherData(response.data);
     } catch (error) {
-      console.error('Error fetching weather data:', error);
-      setError('City not found. Please try again.');
-    } finally {
-      setLoading(false);
+      if (error.response && error.response.status === 404) {
+        alert('City not found! Please enter a valid city name.');
+      } else {
+        alert('Something went wrong. Please try again.');
+      }
     }
-  };
-
-  const handleCityChange = (e) => {
-    setCity(e.target.value);
-  };
-
-  const handleSearch = (e) => {
-    e.preventDefault(); // Prevent form submission from refreshing the page
-    fetchWeather();
   };
 
   return (
-    <div className="weather-container">
-      <h1>Weather App</h1>
-      <form onSubmit={handleSearch}>
-        <input
-          type="text"
-          value={city}
-          onChange={handleCityChange}
-          placeholder="Enter city name"
-        />
-        <button type="submit" disabled={loading}>
-          {loading ? 'Loading...' : 'Search'}
-        </button>
-      </form>
+    <div className="App">
+      <div className="weather-container">
+        <h1>Weather App</h1>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+        {/* Weather Info Section */}
+        {weatherData && (
+          <div className="weather-info-bar">
+          
+            <p>📅{time.toLocaleString()}</p>
+            <p>☀️ {new Date(weatherData.sys.sunrise * 1000).toLocaleTimeString()}</p>
+            <p>🌙 {new Date(weatherData.sys.sunset * 1000).toLocaleTimeString()}</p>
+            <button onClick={fetchWeather}>🔄 Refresh</button>
+          </div>
+        )}
 
-      {weatherData && !loading && (
-        <div>
-          <h2>{weatherData.name}, {weatherData.sys.country}</h2>
-          <p>{weatherData.weather[0].description}</p>
-          <p>Temperature: {weatherData.main.temp}°C</p>
-          <p>hum: {weatherData.main.humidity}%</p>
-          <p>Wind Speed: {weatherData.wind.speed} m/s</p>
+        {/* Search Input & Button */}
+        <div style={{ marginBottom: '15px' }}>
+          <input
+            type="text"
+            placeholder="Enter City"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+          />
         </div>
-      )}
+        <button onClick={fetchWeather}>Get Weather</button>
+
+        {/* Weather Details */}
+        {weatherData && (
+          <>
+            <h2>
+              {weatherData.name}, {weatherData.sys.country}
+            </h2>
+            <p>{weatherData.weather[0].description}</p>
+            <p>Temperature: {weatherData.main.temp}°C</p>
+            <p>Feels like: {weatherData.main.feels_like}°C</p>
+            <p>Humidity: {weatherData.main.humidity}%</p>
+            <p>Wind Speed: {weatherData.wind.speed} m/s</p>
+          </>
+        )}
+      </div>
     </div>
   );
 };
 
-export default Weather;
+export default App;
