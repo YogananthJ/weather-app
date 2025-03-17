@@ -2,6 +2,12 @@
 
 A responsive and user-friendly weather application built using JavaScript (or React), CSS, and Weather API integration. This app allows users to view real-time weather data of cities around the world.
 
+## 🔗 Live Demo
+
+[Click here to view the live site](https://0d2pn6sp-3000.inc1.devtunnels.ms/) 
+
+---
+
 ## 🌐 Features
 
 - 📍 Search weather by city name
