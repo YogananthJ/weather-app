@@ -42,7 +42,7 @@ const App = () => {
         {weatherData && (
           <div className="weather-info-bar">
           
-            <p>📅{time.toLocaleString()}</p>
+            <p>📅 {time.toLocaleString()}</p>
             <p>☀️ {new Date(weatherData.sys.sunrise * 1000).toLocaleTimeString()}</p>
             <p>🌙 {new Date(weatherData.sys.sunset * 1000).toLocaleTimeString()}</p>
             <button onClick={fetchWeather}>🔄 Refresh</button>
