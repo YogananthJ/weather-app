@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './App.css';
+import '../App.css';
 
-const App = () => {
+
+const Weather = () => {
   const [city, setCity] = useState('');
   const [weatherData, setWeatherData] = useState(null);
   const [time, setTime] = useState(new Date());
 
-  // Live Clock Effect
   useEffect(() => {
     const interval = setInterval(() => {
       setTime(new Date());
@@ -15,7 +15,6 @@ const App = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Fetch Weather Data
   const fetchWeather = async () => {
     if (!city) return;
     try {
@@ -34,14 +33,12 @@ const App = () => {
   };
 
   return (
-    <div className="App">
+    <div className="weather-page">
       <div className="weather-container">
         <h1>Weather App</h1>
 
-        {/* Weather Info Section */}
         {weatherData && (
           <div className="weather-info-bar">
-          
             <p>📅 {time.toLocaleString()}</p>
             <p>☀️ {new Date(weatherData.sys.sunrise * 1000).toLocaleTimeString()}</p>
             <p>🌙 {new Date(weatherData.sys.sunset * 1000).toLocaleTimeString()}</p>
@@ -49,20 +46,18 @@ const App = () => {
           </div>
         )}
 
-        {/* Search Input & Button */}
-        <div style={{ marginBottom: '15px' }}>
+        <div className="input-button-group">
           <input
             type="text"
             placeholder="Enter City"
             value={city}
             onChange={(e) => setCity(e.target.value)}
           />
+          <button onClick={fetchWeather}>Get Weather</button>
         </div>
-        <button onClick={fetchWeather}>Get Weather</button>
 
-        {/* Weather Details */}
         {weatherData && (
-          <>
+          <div className="weather-details">
             <h2>
               {weatherData.name}, {weatherData.sys.country}
             </h2>
@@ -71,11 +66,11 @@ const App = () => {
             <p>Feels like: {weatherData.main.feels_like}°C</p>
             <p>Humidity: {weatherData.main.humidity}%</p>
             <p>Wind Speed: {weatherData.wind.speed} m/s</p>
-          </>
+          </div>
         )}
       </div>
     </div>
   );
 };
 
-export default App;
+export default Weather;
